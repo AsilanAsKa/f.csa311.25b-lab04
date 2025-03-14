@@ -1,8 +1,5 @@
 package edu.cmu.cs.cs214.rec02;
 
-import org.junit.Before;
-import org.junit.Test;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +7,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import org.junit.Before;
+import org.junit.Test;
 
 
 /**
@@ -37,40 +39,36 @@ public class IntQueueTest {
      */
     @Before
     public void setUp() {
-        // comment/uncomment these lines to test each class
-        mQueue = new LinkedIntQueue();
-    //    mQueue = new ArrayIntQueue();
-
+        // Use the ArrayIntQueue for testing
+        mQueue = new ArrayIntQueue();  // Use for ArrayIntQueue
+        // mQueue = new LinkedIntQueue();  // Uncomment to test LinkedIntQueue
         testList = new ArrayList<>(List.of(1, 2, 3));
     }
 
     @Test
     public void testIsEmpty() {
-        // This is an example unit test
         assertTrue(mQueue.isEmpty());
     }
 
     @Test
     public void testNotEmpty() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        mQueue.enqueue(5);
+        assertFalse(mQueue.isEmpty());
     }
 
     @Test
     public void testPeekEmptyQueue() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        assertNull(mQueue.peek());  // Queue is empty, so peek should return null
     }
 
     @Test
     public void testPeekNoEmptyQueue() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        mQueue.enqueue(10);
+        assertEquals(Integer.valueOf(10), mQueue.peek());  // Should return the first enqueued element
     }
 
     @Test
     public void testEnqueue() {
-        // This is an example unit test
         for (int i = 0; i < testList.size(); i++) {
             mQueue.enqueue(testList.get(i));
             assertEquals(testList.get(0), mQueue.peek());
@@ -80,9 +78,31 @@ public class IntQueueTest {
 
     @Test
     public void testDequeue() {
-        // TODO: write your own unit test
-        fail("Test not implemented");
+        mQueue.enqueue(1);
+        mQueue.enqueue(2);
+        assertEquals(Integer.valueOf(1), mQueue.dequeue());
+        assertEquals(Integer.valueOf(2), mQueue.dequeue());
+        assertNull(mQueue.dequeue());  // After dequeueing all elements, it should return null
     }
+
+    @Test
+    public void testEnsureCapacity() {
+        // Test for the case when the queue size exceeds the initial capacity
+        for (int i = 0; i < 15; i++) {
+            mQueue.enqueue(i);
+        }
+        assertEquals(15, mQueue.size());  // Expect the size to be 15 after adding more than initial capacity
+    }
+
+    @Test
+    public void testClear() {
+        mQueue.enqueue(1);
+        mQueue.enqueue(2);
+        mQueue.clear();
+        assertTrue(mQueue.isEmpty());  // After clear, the queue should be empty
+        assertNull(mQueue.peek());  // Peek should return null as queue is cleared
+    }
+
 
     @Test
     public void testContent() throws IOException {
